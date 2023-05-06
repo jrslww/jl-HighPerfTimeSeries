@@ -35,3 +35,22 @@ function plot_forecast(data::TimeArray, forecast::TimeArray, title::String, ylab
     p = plot_time_series([data, forecast], ["Actual", "Forecast"], title, ylabel)
     return p
 end
+
+function plot_rolling_mean(data, rolling_mean_data, output_path)
+    plot(data, label="Original Data")
+    plot!(rolling_mean_data, label="Rolling Mean", linewidth=2)
+    xlabel!("Date")
+    ylabel!("Value")
+    title!("Rolling Mean")
+    savefig(output_path)
+end
+
+function save_forecast_results(forecast::TimeArray, output_path::String)
+    open(output_path, "w") do io
+        write(io, "Date,Forecast\n")
+        for i in 1:length(forecast)
+            write(io, "$(timestamp(forecast)[i]),$(values(forecast)[i])\n")
+        end
+    end
+end
+
